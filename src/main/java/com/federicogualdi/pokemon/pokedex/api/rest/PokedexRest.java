@@ -25,4 +25,11 @@ public class PokedexRest {
         logger.trace("Received request to get pokemon: {}", pokemonName);
         return pokedexService.getByName(pokemonName);
     }
+
+    @GET
+    @Path("translated/{name}")
+    public PokemonDto getPokemonByNameWithTranslatedDescription(@PathParam("name") String pokemonName) {
+        logger.trace("Received request to get with translated description pokemon: {}", pokemonName);
+        return pokedexService.getByNameWithTranslatedDescription(pokemonName);
+    }
 }

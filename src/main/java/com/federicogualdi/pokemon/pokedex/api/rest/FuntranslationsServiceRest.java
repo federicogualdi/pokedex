@@ -15,10 +15,10 @@ public interface FuntranslationsServiceRest {
     @POST
     @Path("/shakespeare.json")
     @Produces(MediaType.APPLICATION_JSON)
-    void shakespeareTranslation(@QueryParam("text") String text);
+    String shakespeareTranslation(@QueryParam("text") String text);
 
     @POST
     @Path("/yoda.json")
     @Produces(MediaType.APPLICATION_JSON)
-    void yodaTranslation(@QueryParam("text") String text);
+    String yodaTranslation(@QueryParam("text") String text);
 }
