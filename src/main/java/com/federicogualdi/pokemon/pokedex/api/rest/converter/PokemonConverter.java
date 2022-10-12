@@ -1,6 +1,7 @@
 package com.federicogualdi.pokemon.pokedex.api.rest.converter;
 
 import com.federicogualdi.pokemon.pokedex.api.rest.FuntranslationsServiceRest;
+import com.federicogualdi.pokemon.pokedex.messages.rest.dto.FunTranslationsRequestDto;
 import com.federicogualdi.pokemon.pokedex.messages.rest.dto.PokeApiPokemonDto;
 import com.federicogualdi.pokemon.pokedex.messages.rest.dto.PokeApiPokemonFlavorTextEntriesDto;
 import com.federicogualdi.pokemon.pokedex.messages.rest.dto.PokemonDto;
@@ -34,22 +35,22 @@ public class PokemonConverter {
         return pokemonConverted;
     }
 
-    public PokemonDto toYodaTranslation(PokemonDto pokemonDto){
+    public PokemonDto toYodaTranslation(PokemonDto pokemonDto) {
         return applyYodaTranslation(pokemonDto);
     }
 
-    public PokemonDto toShakespeareTranslation(PokemonDto pokemonDto){
+    public PokemonDto toShakespeareTranslation(PokemonDto pokemonDto) {
         return applyShakespeareTranslation(pokemonDto);
     }
 
-    private PokemonDto applyYodaTranslation(PokemonDto pokemonDto){
-        pokemonDto.description = translatorService.yodaTranslation(pokemonDto.description);
+    private PokemonDto applyYodaTranslation(PokemonDto pokemonDto) {
+        pokemonDto.description = translatorService.yodaTranslation(new FunTranslationsRequestDto(pokemonDto.description)).contents.translated;
         logger.info("Applied Yoda-Translation to '{}': {}", pokemonDto.name, pokemonDto);
         return pokemonDto;
     }
 
-    private PokemonDto applyShakespeareTranslation(PokemonDto pokemonDto){
-        pokemonDto.description = translatorService.shakespeareTranslation(pokemonDto.description);
+    private PokemonDto applyShakespeareTranslation(PokemonDto pokemonDto) {
+        pokemonDto.description = translatorService.shakespeareTranslation(new FunTranslationsRequestDto(pokemonDto.description)).contents.translated;
         logger.info("Applied Shakespeare-Translation to '{}': {}", pokemonDto.name, pokemonDto);
         return pokemonDto;
     }
