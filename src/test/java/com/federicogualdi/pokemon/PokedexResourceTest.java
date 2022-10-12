@@ -19,4 +19,35 @@ public class PokedexResourceTest {
                 .statusCode(200)
                 .body("name", is(pokemonName));
     }
+
+    @Test
+    public void testGetPokemonByNameNotFoundEndpoint() {
+        String pokemonName = "ABC";
+        given()
+                .pathParam("name", pokemonName)
+                .when().get("/api/v1/pokemon/{name}")
+                .then()
+                .statusCode(404);
+    }
+
+    @Test
+    public void testGetTranslatedPokemonByNameEndpoint() {
+        String pokemonName = "mewtwo";
+        given()
+                .pathParam("name", pokemonName)
+                .when().get("/api/v1/pokemon/translated/{name}")
+                .then()
+                .statusCode(200)
+                .body("name", is(pokemonName));
+    }
+
+    @Test
+    public void testGetTranslatedPokemonByNameNotFoundEndpoint() {
+        String pokemonName = "ABC";
+        given()
+                .pathParam("name", pokemonName)
+                .when().get("/api/v1/pokemon/translated/{name}")
+                .then()
+                .statusCode(404);
+    }
 }
