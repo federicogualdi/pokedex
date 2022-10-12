@@ -28,7 +28,7 @@ public class PokedexService {
     PokemonConverter pokemonConverter;
 
     public PokemonDto getByName(String pokemonName) {
-        var pokemonPokeApi = this.pokeApiServiceRest.getPokemonSpecies(pokemonName);
+        var pokemonPokeApi = this.pokeApiServiceRest.getPokemonSpecies(pokemonName.toLowerCase());
         logger.debug("Received pokemon {} from PokeApi", pokemonPokeApi);
         return pokemonConverter.fromPokeAPi(pokemonPokeApi);
     }
