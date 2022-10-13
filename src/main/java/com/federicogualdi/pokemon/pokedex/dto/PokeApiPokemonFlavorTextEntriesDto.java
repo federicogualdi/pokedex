@@ -1,18 +1,23 @@
-package com.federicogualdi.pokemon.pokedex.messages.rest.dto;
+package com.federicogualdi.pokemon.pokedex.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.federicogualdi.pokemon.pokedex.enums.Language;
 
 public class PokeApiPokemonFlavorTextEntriesDto {
     @JsonProperty("flavor_text")
-    public String flavorText;
+    private String flavorText;
     public PokeApiPokemonFlavorTextEntriesLanguagesDto language;
 
 
     public PokeApiPokemonFlavorTextEntriesDto() {
     }
 
-    public Boolean isEnglish(){
-        return "EN".equalsIgnoreCase(language.name);
+    public String getFlavorText() {
+        return flavorText.replaceAll("\\n", " ").replaceAll("\\f", " ");
+    }
+
+    public boolean isEnglish() {
+        return Language.EN.value().equals(language.name);
     }
 
     @Override

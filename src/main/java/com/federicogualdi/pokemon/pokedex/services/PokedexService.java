@@ -1,9 +1,10 @@
 package com.federicogualdi.pokemon.pokedex.services;
 
-import com.federicogualdi.pokemon.pokedex.api.rest.PokeApiServiceRest;
-import com.federicogualdi.pokemon.pokedex.api.rest.converter.PokemonConverter;
-import com.federicogualdi.pokemon.pokedex.messages.rest.dto.PokeApiPokemonDto;
-import com.federicogualdi.pokemon.pokedex.messages.rest.dto.PokemonDto;
+import com.federicogualdi.pokemon.pokedex.constant.Habitat;
+import com.federicogualdi.pokemon.pokedex.converter.PokemonConverter;
+import com.federicogualdi.pokemon.pokedex.dto.PokeApiPokemonDto;
+import com.federicogualdi.pokemon.pokedex.dto.PokemonDto;
+import com.federicogualdi.pokemon.pokedex.rest.PokeApiServiceRest;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +25,9 @@ public class PokedexService {
     @Inject
     PokemonConverter pokemonConverter;
 
+
     public PokemonDto getByName(String pokemonName) {
-        var pokemon = pokemonConverter.fromPokeAPi(getPokeApiPokemon(pokemonName));
-        logger.debug("Returned {} as '{}'", pokemon, pokemonName);
-        return pokemon;
+        return pokemonConverter.from(getPokeApiPokemon(pokemonName));
     }
 
     public PokemonDto getByNameWithTranslatedDescription(String pokemonName) {
@@ -35,14 +35,9 @@ public class PokedexService {
 
         try {
 
-            if ("cave".equals(pokemonDto.habitat) || pokemonDto.isLegendary) {
-                var pokemonYodaTranslated = pokemonConverter.toYodaTranslation(pokemonDto);
-                logger.debug("Returned {} as Yoda-Translation of '{}'", pokemonYodaTranslated, pokemonName);
-                return pokemonYodaTranslated;
-            }
-            var pokemonShakespeareTranslated = pokemonConverter.toShakespeareTranslation(pokemonDto);
-            logger.debug("Returned {} as Shakespeare-Translation of '{}'", pokemonShakespeareTranslated, pokemonName);
-            return pokemonConverter.toShakespeareTranslation(pokemonDto);
+            return neededYodaTranslation(pokemonDto) ?
+                    pokemonConverter.toYodaTranslation(pokemonDto) :
+                    pokemonConverter.toShakespeareTranslation(pokemonDto);
 
         } catch (WebApplicationException webApplicationException) {
 
@@ -53,8 +48,10 @@ public class PokedexService {
     }
 
     private PokeApiPokemonDto getPokeApiPokemon(String pokemonName) {
-        var pokemonPokeApi = this.pokeApiServiceRest.getPokemonSpecies(pokemonName.toLowerCase());
-        logger.debug("Received pokemon {} from PokeApi", pokemonPokeApi);
-        return pokemonPokeApi;
+        return this.pokeApiServiceRest.getPokemonSpecies(pokemonName.toLowerCase().trim());
+    }
+
+    private static boolean neededYodaTranslation(PokemonDto pokemonDto) {
+        return Habitat.CAVE.value().equals(pokemonDto.habitat) || pokemonDto.isLegendary;
     }
 }

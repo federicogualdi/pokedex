@@ -1,6 +1,6 @@
-package com.federicogualdi.pokemon.pokedex.api.rest;
+package com.federicogualdi.pokemon.pokedex.rest;
 
-import com.federicogualdi.pokemon.pokedex.messages.rest.dto.PokemonDto;
+import com.federicogualdi.pokemon.pokedex.dto.PokemonDto;
 import com.federicogualdi.pokemon.pokedex.services.PokedexService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

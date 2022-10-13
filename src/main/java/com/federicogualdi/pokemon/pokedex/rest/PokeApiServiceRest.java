@@ -1,7 +1,6 @@
-package com.federicogualdi.pokemon.pokedex.api.rest;
+package com.federicogualdi.pokemon.pokedex.rest;
 
-import com.federicogualdi.pokemon.pokedex.messages.rest.dto.PokeApiPokemonDto;
-import com.federicogualdi.pokemon.pokedex.messages.rest.dto.PokemonDto;
+import com.federicogualdi.pokemon.pokedex.dto.PokeApiPokemonDto;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import javax.ws.rs.*;

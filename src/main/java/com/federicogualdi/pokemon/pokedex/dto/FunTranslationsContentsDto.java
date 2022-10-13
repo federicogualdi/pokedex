@@ -1,4 +1,4 @@
-package com.federicogualdi.pokemon.pokedex.messages.rest.dto;
+package com.federicogualdi.pokemon.pokedex.dto;
 
 public class FunTranslationsContentsDto {
     public String translated;
