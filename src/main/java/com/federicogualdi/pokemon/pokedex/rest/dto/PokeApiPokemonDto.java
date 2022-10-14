@@ -1,4 +1,4 @@
-package com.federicogualdi.pokemon.pokedex.dto;
+package com.federicogualdi.pokemon.pokedex.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
