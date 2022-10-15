@@ -59,16 +59,15 @@ public class PokedexService {
 
     private PokeApiPokemonDto getPokeApiPokemon(String pokemonName) {
         String pokemonNameEdited = pokemonName.toLowerCase().trim();
-        if (StringUtils.isBlank(pokemonNameEdited)) throw new BadRequestException("Pokemon Name can not be blank");
+        if (StringUtils.isBlank(pokemonNameEdited)) throw new BadRequestException("Pokemon name can not be blank");
 
         try {
             return this.pokeApiServiceRest.getPokemonSpecies(pokemonNameEdited);
         } catch (WebApplicationException e) {
             switch (e.getResponse().getStatus()) {
                 case 404:
-                    throw new NotFoundException();
+                    throw new NotFoundException(String.format("Pokemon '%s' was not found on PokeApi", pokemonName));
                 default:
-                    //throw new BadRequestException(e.getMessage());
                     throw e;
             }
         }

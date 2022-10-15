@@ -31,7 +31,9 @@ public class PokedexRest {
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Containing the response.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = PokemonDto.class))),
             @APIResponse(responseCode = "400", description = "Bad Request.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ErrorDto.class))),
-            @APIResponse(responseCode = "404", description = "A pokemon with the given NAME hasn't been found.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ErrorDto.class)))
+            @APIResponse(responseCode = "404", description = "A pokemon with the given NAME hasn't been found.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ErrorDto.class))),
+            @APIResponse(responseCode = "500", description = "Unexpected error.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ErrorDto.class))),
+            @APIResponse(responseCode = "503", description = "Unhandled errors from third-party services.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ErrorDto.class)))
     })
     public PokemonDto getPokemonByName(@PathParam("name") String pokemonName) {
         logger.trace("Received request to get pokemon: {}", pokemonName);
@@ -44,7 +46,9 @@ public class PokedexRest {
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Containing the response.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = PokemonDto.class))),
             @APIResponse(responseCode = "400", description = "Bad Request.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ErrorDto.class))),
-            @APIResponse(responseCode = "404", description = "A pokemon with the given NAME hasn't been found.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ErrorDto.class)))
+            @APIResponse(responseCode = "404", description = "A pokemon with the given NAME hasn't been found.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ErrorDto.class))),
+            @APIResponse(responseCode = "500", description = "Unexpected error.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ErrorDto.class))),
+            @APIResponse(responseCode = "503", description = "Unhandled errors from third-party services.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ErrorDto.class)))
     })
     public PokemonDto getPokemonByNameWithTranslatedDescription(@PathParam("name") String pokemonName) {
         logger.trace("Received request to get with translated description pokemon: {}", pokemonName);
