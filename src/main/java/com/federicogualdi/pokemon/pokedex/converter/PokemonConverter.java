@@ -1,8 +1,8 @@
 package com.federicogualdi.pokemon.pokedex.converter;
 
-import com.federicogualdi.pokemon.pokedex.dto.PokeApiPokemonDto;
-import com.federicogualdi.pokemon.pokedex.dto.PokeApiPokemonFlavorTextEntriesDto;
-import com.federicogualdi.pokemon.pokedex.dto.PokemonDto;
+import com.federicogualdi.pokemon.pokedex.rest.dto.PokeApiPokemonDto;
+import com.federicogualdi.pokemon.pokedex.rest.dto.PokeApiPokemonFlavorTextEntriesDto;
+import com.federicogualdi.pokemon.pokedex.rest.dto.PokemonDto;
 import com.federicogualdi.pokemon.pokedex.services.TranslatorService;
 
 import javax.enterprise.context.ApplicationScoped;
