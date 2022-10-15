@@ -3,8 +3,8 @@ package com.federicogualdi.pokemon.pokedex.services;
 import com.federicogualdi.pokemon.pokedex.converter.PokemonConverter;
 import com.federicogualdi.pokemon.pokedex.enums.Habitat;
 import com.federicogualdi.pokemon.pokedex.rest.PokeApiServiceRest;
-import com.federicogualdi.pokemon.pokedex.rest.dto.PokeApiPokemonDto;
 import com.federicogualdi.pokemon.pokedex.rest.dto.PokemonDto;
+import io.quarkus.cache.CacheResult;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
@@ -28,13 +28,28 @@ public class PokedexService {
     @Inject
     PokemonConverter pokemonConverter;
 
-
+    @CacheResult(cacheName = "pokemon-cache")
     public PokemonDto getByName(String pokemonName) {
-        return pokemonConverter.from(getPokeApiPokemon(pokemonName));
+        String pokemonNameEdited = pokemonName.toLowerCase().trim();
+        if (StringUtils.isBlank(pokemonNameEdited)) throw new BadRequestException("Pokemon name can not be blank");
+
+        try {
+
+            return pokemonConverter.from(this.pokeApiServiceRest.getPokemonSpecies(pokemonNameEdited));
+
+        } catch (WebApplicationException e) {
+            switch (e.getResponse().getStatus()) {
+                case 404:
+                    throw new NotFoundException(String.format("Pokemon '%s' was not found on PokeApi", pokemonNameEdited));
+                default:
+                    throw e;
+            }
+        }
     }
 
+    @CacheResult(cacheName = "funny-pokemon-cache")
     public PokemonDto getByNameWithTranslatedDescription(String pokemonName) {
-        var pokemonDto = getByName(pokemonName);
+        var pokemonDto = PokemonDto.Clone(getByName(pokemonName));
 
         try {
 
@@ -54,22 +69,6 @@ public class PokedexService {
             }
 
             return pokemonDto;
-        }
-    }
-
-    private PokeApiPokemonDto getPokeApiPokemon(String pokemonName) {
-        String pokemonNameEdited = pokemonName.toLowerCase().trim();
-        if (StringUtils.isBlank(pokemonNameEdited)) throw new BadRequestException("Pokemon name can not be blank");
-
-        try {
-            return this.pokeApiServiceRest.getPokemonSpecies(pokemonNameEdited);
-        } catch (WebApplicationException e) {
-            switch (e.getResponse().getStatus()) {
-                case 404:
-                    throw new NotFoundException(String.format("Pokemon '%s' was not found on PokeApi", pokemonName));
-                default:
-                    throw e;
-            }
         }
     }
 
