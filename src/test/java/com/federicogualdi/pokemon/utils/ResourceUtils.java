@@ -16,7 +16,7 @@ public class ResourceUtils {
                      Thread.currentThread().getContextClassLoader().getResourceAsStream(path)) {
             if (Objects.nonNull(stream)) return IOUtils.toString(stream, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            logger.error("Error on db reset: {}", e.getMessage(), e);
+            logger.error("Error on mock data: {}", e.getMessage(), e);
         }
 
         return "";

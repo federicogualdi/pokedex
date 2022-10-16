@@ -17,13 +17,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @QuarkusTest
 @QuarkusTestResource(RestClientResource.class)
-public class PokedexServicesRest {
+public class PokedexServicesTest {
 
     @Inject
     PokedexService pokedexService;
 
     @Test
-    @Tag("pokedex")
+    @Tag("pokedex-service")
     @DisplayName("Should get pokemon by name.")
     void getPokemonByName() {
         String pokemonName = "pikachu";
@@ -38,7 +38,7 @@ public class PokedexServicesRest {
     }
 
     @Test
-    @Tag("pokedex")
+    @Tag("pokedex-service")
     @DisplayName("Should get translated pokemon by name")
     void getTranslatedPokemonByName() {
         String pokemonName = "mewtwo";
@@ -53,7 +53,7 @@ public class PokedexServicesRest {
     }
 
     @Test
-    @Tag("pokedex")
+    @Tag("pokedex-service")
     @DisplayName("Should fail when is requested pokemon by blank name.")
     void getPokemonByBlankName() {
         String emptyName = "";
@@ -70,7 +70,7 @@ public class PokedexServicesRest {
     }
 
     @Test
-    @Tag("pokedex")
+    @Tag("pokedex-service")
     @DisplayName("Ensure that 'pokemon' is different from 'translated pokemon'")
     void ensurePokemonIsDifferentFromTranslatedPokemon() {
         String pokemonName = "mewtwo";
@@ -81,7 +81,7 @@ public class PokedexServicesRest {
     }
 
     @Test
-    @Tag("pokedex")
+    @Tag("pokedex-service")
     @DisplayName("Ensure that space or capital letter in pokemon name returns the same pokemon")
     void ensurePokemonNameFormattingIsNotImportant() {
         String pokemonName = "mewtwo";
@@ -97,7 +97,7 @@ public class PokedexServicesRest {
     }
 
     @Test
-    @Tag("pokedex")
+    @Tag("pokedex-service")
     @DisplayName("Should fallback with normal pokemon when translating services are can't translate")
     void fallingbackThirdPartyServicesError() {
         String pokemonName = "bulbasaur";

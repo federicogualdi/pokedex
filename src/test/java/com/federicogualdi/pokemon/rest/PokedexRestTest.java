@@ -78,7 +78,7 @@ public class PokedexRestTest {
 
     @Test
     @Tag("translated-pokemon")
-    @DisplayName("Should fail when pokemon is not found.")
+    @DisplayName("Should fail when pokemon to translate is not found.")
     public void testGetTranslatedPokemonByNameNotFoundEndpoint() {
         String pokemonName = "NOT_EXISTING_POKEMON";
         given()
