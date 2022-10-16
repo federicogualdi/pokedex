@@ -2,7 +2,7 @@ package com.federicogualdi.pokemon.pokedex.services;
 
 import com.federicogualdi.pokemon.pokedex.converter.PokemonConverter;
 import com.federicogualdi.pokemon.pokedex.enums.Habitat;
-import com.federicogualdi.pokemon.pokedex.rest.PokeApiServiceRest;
+import com.federicogualdi.pokemon.pokedex.rest.client.PokeApiServiceRest;
 import com.federicogualdi.pokemon.pokedex.rest.dto.PokemonDto;
 import io.quarkus.cache.CacheResult;
 import org.apache.commons.lang3.StringUtils;

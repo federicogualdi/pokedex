@@ -2,7 +2,7 @@ package com.federicogualdi.pokemon.pokedex.services;
 
 import com.federicogualdi.pokemon.pokedex.rest.dto.FunTranslationsRequestDto;
 import com.federicogualdi.pokemon.pokedex.rest.dto.PokemonDto;
-import com.federicogualdi.pokemon.pokedex.rest.FuntranslationsServiceRest;
+import com.federicogualdi.pokemon.pokedex.rest.client.FuntranslationsServiceRest;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import javax.enterprise.context.ApplicationScoped;

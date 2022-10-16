@@ -1,4 +1,4 @@
-package com.federicogualdi.pokemon.pokedex.rest;
+package com.federicogualdi.pokemon.pokedex.rest.client;
 
 import com.federicogualdi.pokemon.pokedex.rest.dto.FunTranslationsDto;
 import com.federicogualdi.pokemon.pokedex.rest.dto.FunTranslationsRequestDto;

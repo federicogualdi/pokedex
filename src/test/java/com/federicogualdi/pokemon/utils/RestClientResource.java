@@ -64,8 +64,8 @@ public class RestClientResource implements QuarkusTestResourceLifecycleManager {
 
 
         Map<String, String> props = new HashMap<>();
-        props.put("com.federicogualdi.pokemon.pokedex.rest.PokeApiServiceRest/mp-rest/url", wireMockServer.baseUrl() + "/pokeapi");
-        props.put("com.federicogualdi.pokemon.pokedex.rest.FuntranslationsServiceRest/mp-rest/url", wireMockServer.baseUrl() + "/funtranslations");
+        props.put("com.federicogualdi.pokemon.pokedex.rest.client.PokeApiServiceRest/mp-rest/url", wireMockServer.baseUrl() + "/pokeapi");
+        props.put("com.federicogualdi.pokemon.pokedex.rest.client.FuntranslationsServiceRest/mp-rest/url", wireMockServer.baseUrl() + "/funtranslations");
         return props;
     }
 
