@@ -1,7 +1,11 @@
 package com.federicogualdi.pokemon.pokedex.rest.dto;
 
 public class FunTranslationsContentsDto {
-    public String translated;
+    private String translated;
+
+    public String getTranslated() {
+        return translated.trim().replaceAll(" +", " ");
+    }
 
     @Override
     public String toString() {
