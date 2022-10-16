@@ -62,6 +62,13 @@ public class RestClientResource implements QuarkusTestResourceLifecycleManager {
                         .withHeader("Content-Type", "application/json")
                         .withBody(ResourceUtils.getResource("funtranslations/yoda.mewtwo-description.json"))));
 
+        /// Bulbasaur
+        stubFor(post(urlEqualTo("/funtranslations/translate/shakespeare"))
+                .withRequestBody(equalTo("{\"text\":\"A strange seed was planted on its back at birth. The plant sprouts and grows with this POKéMON.\"}"))
+                .willReturn(aResponse()
+                        .withStatus(429)));
+
+
 
         Map<String, String> props = new HashMap<>();
         props.put("com.federicogualdi.pokemon.pokedex.rest.client.PokeApiServiceRest/mp-rest/url", wireMockServer.baseUrl() + "/pokeapi");

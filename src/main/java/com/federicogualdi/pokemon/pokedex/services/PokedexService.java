@@ -47,29 +47,36 @@ public class PokedexService {
         }
     }
 
-    @CacheResult(cacheName = "funny-pokemon-cache")
     public PokemonDto getByNameWithTranslatedDescription(String pokemonName) {
-        var pokemonDto = PokemonDto.Clone(getByName(pokemonName));
 
         try {
 
-            return neededYodaTranslation(pokemonDto) ?
-                    pokemonConverter.toYodaTranslation(pokemonDto) :
-                    pokemonConverter.toShakespeareTranslation(pokemonDto);
+            return getTranslatedPokemon(pokemonName);
 
         } catch (WebApplicationException e) {
 
             switch (e.getResponse().getStatus()) {
+                case 400:
+                case 404:
+                    throw e;
                 case 429:
-                    logger.warn("FunTranslations rate limited occurred for '{}', falling back with {}: {}", pokemonName, pokemonDto, e.getMessage());
+                    logger.warn("FunTranslations rate limited occurred for '{}', falling back with untranslated one: {}", pokemonName, e.getMessage());
                     break;
                 default:
-                    logger.error("Unable to find Translation for '{}', falling back with {}: {}", pokemonName, pokemonDto, e.getMessage(), e);
+                    logger.error("Unable to find Translation for '{}', falling back with untranslated one: {}", pokemonName, e.getMessage(), e);
                     break;
             }
 
-            return pokemonDto;
+            return PokemonDto.Clone(getByName(pokemonName));
         }
+    }
+
+    @CacheResult(cacheName = "funny-pokemon-cache")
+    public PokemonDto getTranslatedPokemon(String pokemonName) {
+        var pokemonDto = PokemonDto.Clone(getByName(pokemonName));
+        return neededYodaTranslation(pokemonDto) ?
+                pokemonConverter.toYodaTranslation(pokemonDto) :
+                pokemonConverter.toShakespeareTranslation(pokemonDto);
     }
 
     private static boolean neededYodaTranslation(PokemonDto pokemonDto) {

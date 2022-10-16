@@ -11,9 +11,11 @@ import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
 @QuarkusTestResource(RestClientResource.class)
@@ -59,11 +61,11 @@ public class PokedexServicesTest {
         String emptyName = "";
         String notUsefulName = " ";
 
-        Assertions.assertThrows(
+        assertThrows(
                 BadRequestException.class,
                 () -> pokedexService.getByName(emptyName)
         );
-        Assertions.assertThrows(
+        assertThrows(
                 BadRequestException.class,
                 () -> pokedexService.getByName(notUsefulName)
         );
@@ -98,17 +100,25 @@ public class PokedexServicesTest {
 
     @Test
     @Tag("pokedex-service")
-    @DisplayName("Should fallback with normal pokemon when translating services are can't translate")
+    @DisplayName("Should fallback with normal pokemon when translating services can't translate")
     void fallingbackThirdPartyServicesError() {
         String pokemonName = "bulbasaur";
         var pokemon = pokedexService.getByName(pokemonName);
-        var pokemonTranslated = pokedexService.getByNameWithTranslatedDescription(pokemonName);
+        var pokemonFallingBack = pokedexService.getByNameWithTranslatedDescription(pokemonName);
 
-        // Bulbasaur is not mapped in funtranslations so FunTranslationServices will throw 404
+        // Bulbasaur is mapped as 429 error for FunTranslations endpoint
+        Throwable exception = assertThrows(
+                WebApplicationException.class,
+                () -> pokedexService.getTranslatedPokemon(pokemonName)
+        );
 
+        // Ensure that 429 is coming back from FunTranslations
+        assertEquals(((WebApplicationException) exception).getResponse().getStatus(), Response.Status.TOO_MANY_REQUESTS.getStatusCode());
+
+        // Ensure that 'pokemon' and 'falling-back pokemon' are equals
         assertAll(
-                () -> Assertions.assertTrue(pokemon != pokemonTranslated),
-                () -> Assertions.assertTrue(Objects.equals(pokemon, pokemonTranslated))
+                () -> Assertions.assertTrue(pokemon != pokemonFallingBack),
+                () -> Assertions.assertTrue(Objects.equals(pokemon, pokemonFallingBack))
         );
     }
 }
