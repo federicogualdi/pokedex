@@ -22,7 +22,7 @@ public class PokemonConverter {
                         .map(d -> d.getFlavorText())
                         .orElse(null)
                 )
-                .habitat(pokemonPokeApi.habitat.name)
+                .habitat(pokemonPokeApi.getHabitatName())
                 .isLegendary(pokemonPokeApi.isLegendary)
                 .build();
     }

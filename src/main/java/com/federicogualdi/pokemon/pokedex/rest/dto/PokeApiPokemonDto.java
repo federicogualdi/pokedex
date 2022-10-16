@@ -3,6 +3,7 @@ package com.federicogualdi.pokemon.pokedex.rest.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
+import java.util.Objects;
 
 public class PokeApiPokemonDto {
     public String name;
@@ -13,6 +14,10 @@ public class PokeApiPokemonDto {
     public Boolean isLegendary;
 
     public PokeApiPokemonDto() {
+    }
+
+    public String getHabitatName() {
+        return Objects.nonNull(habitat) ? habitat.name : null;
     }
 
     @Override
