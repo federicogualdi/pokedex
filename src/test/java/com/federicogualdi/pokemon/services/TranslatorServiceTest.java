@@ -33,16 +33,16 @@ public class TranslatorServiceTest {
     @DisplayName("Should apply shakespeare translation.")
     void applyShakespeareTranslationToPokemon() {
         var pokemon = pokedexService.getByName("pikachu");
-        var pokemonTranslated = translatorService.applyShakespeareTranslation(PokemonDto.Clone(pokemon));
+        var pokemonTranslated = translatorService.applyShakespeareTranslation(pokemon);
 
         var shakespeareTranslations = Json.decodeValue(
-                ResourceUtils.getResource(String.format("funtranslations/shakespeare.%s-description.json", pokemon.name)),
+                ResourceUtils.getResource(String.format("funtranslations/shakespeare.%s-description.json", pokemon.getName())),
                 FunTranslationsDto.class);
 
 
         assertAll(
-                () -> Assertions.assertNotEquals(pokemon.description, pokemonTranslated.description),
-                () -> Assertions.assertEquals(pokemonTranslated.description, shakespeareTranslations.contents.getTranslated())
+                () -> Assertions.assertNotEquals(pokemon.getDescription(), pokemonTranslated.getDescription()),
+                () -> Assertions.assertEquals(pokemonTranslated.getDescription(), shakespeareTranslations.contents.getTranslated())
         );
     }
 
@@ -51,16 +51,16 @@ public class TranslatorServiceTest {
     @DisplayName("Should apply yoda translation.")
     void applyYodaTranslationToPokemon() {
         var pokemon = pokedexService.getByName("mewtwo");
-        var pokemonTranslated = translatorService.applyYodaTranslation(PokemonDto.Clone(pokemon));
+        var pokemonTranslated = translatorService.applyYodaTranslation(pokemon);
 
         var yodaTranslations = Json.decodeValue(
-                ResourceUtils.getResource(String.format("funtranslations/yoda.%s-description.json", pokemon.name)),
+                ResourceUtils.getResource(String.format("funtranslations/yoda.%s-description.json", pokemon.getName())),
                 FunTranslationsDto.class);
 
 
         assertAll(
-                () -> Assertions.assertNotEquals(pokemon.description, pokemonTranslated.description),
-                () -> Assertions.assertEquals(pokemonTranslated.description, yodaTranslations.contents.getTranslated())
+                () -> Assertions.assertNotEquals(pokemon.getDescription(), pokemonTranslated.getDescription()),
+                () -> Assertions.assertEquals(pokemonTranslated.getDescription(), yodaTranslations.contents.getTranslated())
         );
     }
 

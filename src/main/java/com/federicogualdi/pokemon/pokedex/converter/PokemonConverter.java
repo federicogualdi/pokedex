@@ -15,16 +15,16 @@ public class PokemonConverter {
     TranslatorService translatorService;
 
     public PokemonDto from(PokeApiPokemonDto pokemonPokeApi) {
-        PokemonDto pokemonConverted = new PokemonDto();
-        pokemonConverted.name = pokemonPokeApi.name;
-        pokemonConverted.description = pokemonPokeApi.flavorTextEntries.stream()
-                .filter(PokeApiPokemonFlavorTextEntriesDto::isEnglish).findFirst()
-                .map(d -> d.getFlavorText())
-                .orElse(null);
-        pokemonConverted.habitat = pokemonPokeApi.habitat.name;
-        pokemonConverted.isLegendary = pokemonPokeApi.isLegendary;
-
-        return pokemonConverted;
+        return new PokemonDto.Builder()
+                .name(pokemonPokeApi.name)
+                .description(pokemonPokeApi.flavorTextEntries.stream()
+                        .filter(PokeApiPokemonFlavorTextEntriesDto::isEnglish).findFirst()
+                        .map(d -> d.getFlavorText())
+                        .orElse(null)
+                )
+                .habitat(pokemonPokeApi.habitat.name)
+                .isLegendary(pokemonPokeApi.isLegendary)
+                .build();
     }
 
     public PokemonDto toYodaTranslation(PokemonDto pokemonDto) {

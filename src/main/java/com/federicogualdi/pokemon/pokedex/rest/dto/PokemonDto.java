@@ -1,26 +1,79 @@
 package com.federicogualdi.pokemon.pokedex.rest.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class PokemonDto {
-    public String name;
-    public String description;
-    public String habitat;
-    public Boolean isLegendary;
+    private final String name;
+    private final String description;
+    private final String habitat;
+    private final Boolean isLegendary;
 
-    public PokemonDto() {
+    public static class Builder {
+        private String name;
+        private String description;
+        private String habitat;
+        private Boolean isLegendary;
+
+        public PokemonDto.Builder name(String value) {
+            name = value;
+            return this;
+        }
+
+        public PokemonDto.Builder description(String value) {
+            description = value;
+            return this;
+        }
+
+        public PokemonDto.Builder habitat(String value) {
+            habitat = value;
+            return this;
+        }
+
+        public PokemonDto.Builder isLegendary(Boolean value) {
+            isLegendary = value;
+            return this;
+        }
+
+        public PokemonDto build() {
+            return new PokemonDto(this);
+        }
+    }
+
+    public PokemonDto(PokemonDto.Builder builder) {
+        name = builder.name;
+        description = builder.description;
+        habitat = builder.habitat;
+        isLegendary = builder.isLegendary;
     }
 
     public static PokemonDto Clone(PokemonDto pokemon) {
-        var pokemonNew = new PokemonDto();
-        pokemonNew.name = pokemon.name;
-        pokemonNew.description = pokemon.description;
-        pokemonNew.habitat = pokemon.habitat;
-        pokemonNew.isLegendary = pokemon.isLegendary;
-        return pokemonNew;
+        return new PokemonDto.Builder()
+                .name(pokemon.getName())
+                .description(pokemon.getDescription())
+                .habitat(pokemon.getHabitat())
+                .isLegendary(pokemon.isLegendary())
+                .build();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getHabitat() {
+        return habitat;
+    }
+
+    @JsonProperty("isLegendary")
+    public Boolean isLegendary() {
+        return isLegendary;
+    }
 
     @Override
     public boolean equals(Object o) {
