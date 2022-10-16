@@ -16,12 +16,12 @@ public class TranslatorService {
     FuntranslationsServiceRest funtranslationsServiceRest;
 
     public PokemonDto applyYodaTranslation(PokemonDto pokemonDto) {
-        pokemonDto.description = funtranslationsServiceRest.yodaTranslation(new FunTranslationsRequestDto(pokemonDto.description)).contents.translated;
+        pokemonDto.description = funtranslationsServiceRest.yodaTranslation(new FunTranslationsRequestDto(pokemonDto.description)).contents.getTranslated();
         return pokemonDto;
     }
 
     public PokemonDto applyShakespeareTranslation(PokemonDto pokemonDto) {
-        pokemonDto.description = funtranslationsServiceRest.shakespeareTranslation(new FunTranslationsRequestDto(pokemonDto.description)).contents.translated;
+        pokemonDto.description = funtranslationsServiceRest.shakespeareTranslation(new FunTranslationsRequestDto(pokemonDto.description)).contents.getTranslated();
         return pokemonDto;
     }
 }
