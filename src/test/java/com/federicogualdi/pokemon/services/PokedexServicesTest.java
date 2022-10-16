@@ -32,10 +32,10 @@ public class PokedexServicesTest {
         var pokemon = pokedexService.getByName(pokemonName);
 
         assertAll(
-                () -> Assertions.assertEquals("pikachu", pokemon.name),
-                () -> Assertions.assertEquals("When several of these POKéMON gather, their electricity could build and cause lightning storms.", pokemon.description),
-                () -> Assertions.assertEquals("forest", pokemon.habitat),
-                () -> Assertions.assertEquals(false, pokemon.isLegendary)
+                () -> Assertions.assertEquals("pikachu", pokemon.getName()),
+                () -> Assertions.assertEquals("When several of these POKéMON gather, their electricity could build and cause lightning storms.", pokemon.getDescription()),
+                () -> Assertions.assertEquals("forest", pokemon.getHabitat()),
+                () -> Assertions.assertEquals(false, pokemon.isLegendary())
         );
     }
 
@@ -47,10 +47,10 @@ public class PokedexServicesTest {
         var pokemon = pokedexService.getByNameWithTranslatedDescription(pokemonName);
 
         assertAll(
-                () -> Assertions.assertEquals("mewtwo", pokemon.name),
-                () -> Assertions.assertEquals("Created by a scientist after years of horrific gene splicing and dna engineering experiments, it was.", pokemon.description),
-                () -> Assertions.assertEquals("rare", pokemon.habitat),
-                () -> Assertions.assertEquals(true, pokemon.isLegendary)
+                () -> Assertions.assertEquals("mewtwo", pokemon.getName()),
+                () -> Assertions.assertEquals("Created by a scientist after years of horrific gene splicing and dna engineering experiments, it was.", pokemon.getDescription()),
+                () -> Assertions.assertEquals("rare", pokemon.getHabitat()),
+                () -> Assertions.assertEquals(true, pokemon.isLegendary())
         );
     }
 

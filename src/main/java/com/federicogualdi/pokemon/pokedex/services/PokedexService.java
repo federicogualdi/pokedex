@@ -35,7 +35,7 @@ public class PokedexService {
 
         try {
 
-            return pokemonConverter.from(this.pokeApiServiceRest.getPokemonSpecies(pokemonNameEdited));
+            return pokemonConverter.from(pokeApiServiceRest.getPokemonSpecies(pokemonNameEdited));
 
         } catch (WebApplicationException e) {
             switch (e.getResponse().getStatus()) {
@@ -79,7 +79,7 @@ public class PokedexService {
                 pokemonConverter.toShakespeareTranslation(pokemonDto);
     }
 
-    private static boolean neededYodaTranslation(PokemonDto pokemonDto) {
-        return Habitat.CAVE.value().equals(pokemonDto.habitat) || pokemonDto.isLegendary;
+    private boolean neededYodaTranslation(PokemonDto pokemonDto) {
+        return Habitat.CAVE.value().equals(pokemonDto.getHabitat()) || pokemonDto.isLegendary();
     }
 }
