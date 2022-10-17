@@ -6,7 +6,7 @@ import javax.ws.rs.core.Response.Status;
 
 public enum ErrorCollection {
     NOT_FOUND_EXCEPTION(new ErrorDto.Builder()
-            .title("Pokemon not found")
+            .title("Not found")
             .status(Status.NOT_FOUND.getStatusCode()).build()),
     BAD_REQUEST_EXCEPTION(new ErrorDto.Builder()
             .title("Bad request")
