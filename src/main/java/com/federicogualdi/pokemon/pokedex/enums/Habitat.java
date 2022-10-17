@@ -4,7 +4,7 @@ public enum Habitat {
 
     CAVE("cave");
 
-    private String value;
+    private final String value;
 
     Habitat(String v) {
         value = v;

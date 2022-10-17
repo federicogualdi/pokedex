@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -107,18 +106,18 @@ public class PokedexServicesTest {
         var pokemonFallingBack = pokedexService.getByNameWithTranslatedDescription(pokemonName);
 
         // Bulbasaur is mapped as 429 error for FunTranslations endpoint
-        Throwable exception = assertThrows(
+        WebApplicationException exception = assertThrows(
                 WebApplicationException.class,
                 () -> pokedexService.getTranslatedPokemon(pokemonName)
         );
 
         // Ensure that 429 is coming back from FunTranslations
-        assertEquals(((WebApplicationException) exception).getResponse().getStatus(), Response.Status.TOO_MANY_REQUESTS.getStatusCode());
+        assertEquals(exception.getResponse().getStatus(), Response.Status.TOO_MANY_REQUESTS.getStatusCode());
 
         // Ensure that 'pokemon' and 'falling-back pokemon' are equals
         assertAll(
-                () -> Assertions.assertTrue(pokemon != pokemonFallingBack),
-                () -> Assertions.assertTrue(Objects.equals(pokemon, pokemonFallingBack))
+                () -> Assertions.assertNotSame(pokemon, pokemonFallingBack),
+                () -> Assertions.assertEquals(pokemon, pokemonFallingBack)
         );
     }
 }

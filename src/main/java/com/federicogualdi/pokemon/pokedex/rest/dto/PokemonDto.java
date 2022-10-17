@@ -49,7 +49,7 @@ public class PokemonDto {
         isLegendary = builder.isLegendary;
     }
 
-    public static PokemonDto Clone(PokemonDto pokemon) {
+    public static PokemonDto clone(PokemonDto pokemon) {
         return new PokemonDto.Builder()
                 .name(pokemon.getName())
                 .description(pokemon.getDescription())

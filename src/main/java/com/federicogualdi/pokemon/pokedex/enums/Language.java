@@ -4,7 +4,7 @@ public enum Language {
 
     EN("en");
 
-    private String value;
+    private final String value;
 
     Language(String v) {
         value = v;

@@ -1,7 +1,6 @@
 package com.federicogualdi.pokemon.services;
 
 import com.federicogualdi.pokemon.pokedex.rest.dto.FunTranslationsDto;
-import com.federicogualdi.pokemon.pokedex.rest.dto.PokemonDto;
 import com.federicogualdi.pokemon.pokedex.services.PokedexService;
 import com.federicogualdi.pokemon.pokedex.services.TranslatorService;
 import com.federicogualdi.pokemon.utils.ResourceUtils;

@@ -54,7 +54,7 @@ The application can be packaged using:
 ```shell script
 ./mvnw package -Dquarkus.package.type=uber-jar
 ```
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+The application, packaged as a _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
 
 
 
@@ -86,7 +86,7 @@ You can also download OpenAPI endpoints specification in json format:
 If you want to use Docker and you haven't installed it yet, just go to:
 https://docs.docker.com/get-docker/
 
-If you want to build and run the project and you haven't installed java yet, just go to:
+If you want to build and run the project, and you haven't installed java yet, just go to:
 https://www.java.com/en/download/help/download_options.html
 
 

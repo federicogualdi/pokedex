@@ -38,12 +38,10 @@ public class PokedexService {
             return pokemonConverter.from(pokeApiServiceRest.getPokemonSpecies(pokemonNameEdited));
 
         } catch (WebApplicationException e) {
-            switch (e.getResponse().getStatus()) {
-                case 404:
-                    throw new NotFoundException(String.format("Pokemon '%s' was not found on PokeApi", pokemonNameEdited));
-                default:
-                    throw e;
+            if (e.getResponse().getStatus() == 404) {
+                throw new NotFoundException(String.format("Pokemon '%s' was not found on PokeApi", pokemonNameEdited));
             }
+            throw e;
         }
     }
 
@@ -67,13 +65,13 @@ public class PokedexService {
                     break;
             }
 
-            return PokemonDto.Clone(getByName(pokemonName));
+            return PokemonDto.clone(getByName(pokemonName));
         }
     }
 
     @CacheResult(cacheName = "funny-pokemon-cache")
     public PokemonDto getTranslatedPokemon(String pokemonName) {
-        var pokemonDto = PokemonDto.Clone(getByName(pokemonName));
+        var pokemonDto = PokemonDto.clone(getByName(pokemonName));
         return neededYodaTranslation(pokemonDto) ?
                 pokemonConverter.toYodaTranslation(pokemonDto) :
                 pokemonConverter.toShakespeareTranslation(pokemonDto);
