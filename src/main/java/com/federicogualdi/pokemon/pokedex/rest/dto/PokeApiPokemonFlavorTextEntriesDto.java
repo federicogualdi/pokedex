@@ -13,7 +13,9 @@ public class PokeApiPokemonFlavorTextEntriesDto {
     }
 
     public String getFlavorText() {
-        return flavorText.replaceAll("\\n", " ").replaceAll("\\f", " ");
+        return flavorText.replaceAll("\\n", " ")
+                .replaceAll("\\f", " ")
+                .trim().replaceAll(" +", " ");
     }
 
     public boolean isEnglish() {
