@@ -10,8 +10,12 @@ requires-python = ">=3.13,<4.0"
 dependencies = [
     "loguru (>=0.7.3,<0.8.0)",
     "fastapi[standard-no-fastapi-cloud-cli] (>=0.125.0,<0.126.0)",
+    "pydantic-settings (>=2.12.0,<3.0.0)",
 ]
 
+[tool.poetry]
+name = "pokedex"
+packages = [{ include = "pokedex", from = "src" }]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -71,8 +75,6 @@ select = [
 ignore = [
     "ANN002",   # Missing type annotation for *args
     "ANN003",   # Missing type annotation for **kwargs
-    "ANN101",   # Missing type annotation for self in method1
-    "ANN102",   # Missing type annotation for cls in classmethod1
     "G004",     # Logging statement uses f-string
     "TD002",    # Missing author in TODO; try: # TODO(<author_name>): ...
     "TD003",    # Missing issue link on the line following this TODO

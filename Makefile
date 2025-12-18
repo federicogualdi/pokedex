@@ -6,7 +6,7 @@ install-dev:
 	poetry run pre-commit install
 
 run:
-	poetry run uvicorn --reload --host 0.0.0.0 --port 8000 src.entrypoints.rest.server:app
+	poetry run uvicorn --reload --host 0.0.0.0 --port 8000 pokedex.entrypoints.rest.server:app
 
 test:
 	poetry run pytest -q

@@ -1,0 +1,1 @@
+"""Pokeapi http client package."""
