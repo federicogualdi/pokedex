@@ -1,8 +1,8 @@
 install:
-	poetry install --without dev --no-root
+	poetry install --without dev
 
 install-dev:
-	poetry install --no-root
+	poetry install
 	poetry run pre-commit install
 
 run:
