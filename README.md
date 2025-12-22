@@ -60,3 +60,7 @@ Run code linting and static checks:
 ```bash
   make lint
 ```
+
+## Documentation
+
+Documentation: [View Docs](DOCS.md)
