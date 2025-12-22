@@ -9,6 +9,7 @@ from starlette.responses import JSONResponse
 
 from pokedex.entrypoints.rest.schemas.shared import ErrorResponseSchema
 from pokedex.settings import get_logger
+from pokedex.shared.exceptions import ExecutionError
 from pokedex.shared.exceptions import InvalidArgumentError
 from pokedex.shared.exceptions import NotFoundError
 
@@ -37,6 +38,13 @@ def install_error_handlers(app: FastAPI) -> None:
     async def validation_handler(_: Request, exc: RequestValidationError) -> JSONResponse:
         return JSONResponse(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            content=ErrorResponseSchema(details=str(exc)).model_dump(),
+        )
+
+    @app.exception_handler(ExecutionError)
+    async def execution_handler(_: Request, exc: RequestValidationError) -> JSONResponse:
+        return JSONResponse(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             content=ErrorResponseSchema(details=str(exc)).model_dump(),
         )
 
