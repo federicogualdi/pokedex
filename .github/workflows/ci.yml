@@ -3,6 +3,9 @@ name: CI
 on:
   push:
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: Lint
@@ -16,20 +19,18 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-          cache: "pip"
 
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - uses: snok/install-poetry@v1
+        with:
+          virtualenvs-in-project: true
 
-      - name: Cache Poetry virtualenv
+      - name: Cache .venv
         uses: actions/cache@v4
         with:
-          path: ~/.cache/pypoetry/virtualenvs
-          key: poetry-venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+          path: .venv
+          key: venv-${{ runner.os }}-py3.13-${{ hashFiles('poetry.lock') }}
           restore-keys: |
-            poetry-venv-${{ runner.os }}-
+            venv-${{ runner.os }}-py3.13-
 
       - name: Cache pre-commit
         uses: actions/cache@v4
@@ -41,7 +42,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          poetry install --with dev --no-root
+          poetry install --with dev
 
       - name: Run lint
         run: |
@@ -60,24 +61,22 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-          cache: "pip"
 
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - uses: snok/install-poetry@v1
+        with:
+          virtualenvs-in-project: true
 
-      - name: Cache Poetry virtualenv
+      - name: Cache .venv
         uses: actions/cache@v4
         with:
-          path: ~/.cache/pypoetry/virtualenvs
-          key: poetry-venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+          path: .venv
+          key: venv-${{ runner.os }}-py3.13-${{ hashFiles('poetry.lock') }}
           restore-keys: |
-            poetry-venv-${{ runner.os }}-
+            venv-${{ runner.os }}-py3.13-
 
       - name: Install dependencies
         run: |
-          poetry install --with dev --no-root
+          poetry install --with dev
 
       - name: Run tests
         run: |
