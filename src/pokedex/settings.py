@@ -37,6 +37,8 @@ class Settings(CommonSettings):
 
     # External services
     pokeapi_base_url: str = Field(default="https://pokeapi.co/api/v2")
+    funtranslations_base_url: str = Field(default="https://api.funtranslations.com/translate")
+    funtranslations_shakespeare_path: str = Field(default="shakespeare")
 
     # HTTP
     http_timeout_seconds: float = Field(default=5.0, validation_alias="HTTP_TIMEOUT_SECONDS")
