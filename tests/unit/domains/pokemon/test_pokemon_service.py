@@ -8,6 +8,7 @@ from pokedex.domains.pokemon.model import Pokemon
 from pokedex.domains.pokemon.ports import PokemonSpeciesPort
 from pokedex.domains.pokemon.service import PokemonService
 from pokedex.shared.exceptions import NotFoundError  # se si chiama shared/errors.py -> cambia import
+from tests.conftest import NoOpTranslationPort
 
 
 class FakeSpeciesPort(PokemonSpeciesPort):
@@ -27,7 +28,7 @@ class FakeSpeciesPort(PokemonSpeciesPort):
 async def test_get_pokemon_returns_species_from_port():
     """Ensure PokemonService retrieves species data through the SpeciesPort and returns the expected domain object."""
     # Arrange
-    svc = PokemonService(species_port=FakeSpeciesPort())
+    svc = PokemonService(species_port=FakeSpeciesPort(), translation_port=NoOpTranslationPort)
 
     # Act
     result = await svc.get_pokemon("MewTwo")
@@ -48,7 +49,7 @@ async def test_get_pokemon_calls_species_port_once():
         habitat="cave",
         isLegendary=True,
     )
-    svc = PokemonService(species_port=port)
+    svc = PokemonService(species_port=port, translation_port=NoOpTranslationPort)
 
     # Act
     name = "mewtwo"
@@ -66,7 +67,7 @@ async def test_get_pokemon_propagates_not_found():
     # Arrange
     port = AsyncMock()
     port.get_species_info.side_effect = NotFoundError("Pokemon 'missing' not found")
-    svc = PokemonService(species_port=port)
+    svc = PokemonService(species_port=port, translation_port=NoOpTranslationPort)
 
     # Act / Assert
     with pytest.raises(NotFoundError):

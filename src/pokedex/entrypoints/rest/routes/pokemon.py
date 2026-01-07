@@ -5,9 +5,12 @@ from fastapi import Depends
 from starlette import status
 from starlette.requests import Request
 
+from pokedex.domains.pokemon.ports import PokemonSpeciesPort
+from pokedex.domains.pokemon.ports import TranslationPort
 from pokedex.domains.pokemon.service import PokemonService
 from pokedex.entrypoints.rest.schemas.pokemon import GetPokemonResponse
 from pokedex.entrypoints.rest.schemas.shared import ErrorResponseSchema
+from pokedex.infrastructure.http.clients.funtranslations.client import FuntranslationsApiClient
 from pokedex.infrastructure.http.clients.pokeapi.client import PokeApiClient
 from pokedex.settings import settings
 
@@ -15,14 +18,22 @@ from pokedex.settings import settings
 router = APIRouter(prefix="/pokemon", tags=["Pokemon"])
 
 
-def get_pokeapi_client(request: Request) -> PokeApiClient:
-    """Get PokeAPI client."""
+def get_pokemon_species_client(request: Request) -> PokemonSpeciesPort:
+    """Get Pokemon Species client."""
     return PokeApiClient(http=request.app.state.http, base_url=settings.pokeapi_base_url)
+
+
+def get_translation_client(request: Request) -> TranslationPort:
+    """Get Translation client."""
+    return FuntranslationsApiClient(http=request.app.state.http, base_url=settings.funtranslations_base_url)
 
 
 def pokemon_service_factory(request: Request) -> PokemonService:
     """Pokemon service factory."""
-    return PokemonService(species_port=get_pokeapi_client(request))
+    return PokemonService(
+        species_port=get_pokemon_species_client(request),
+        translation_port=get_translation_client(request),
+    )
 
 
 @router.get(
@@ -37,10 +48,31 @@ def pokemon_service_factory(request: Request) -> PokemonService:
         status.HTTP_404_NOT_FOUND: {"model": ErrorResponseSchema, "description": "Pokemon not found"},
     },
 )
-async def get_users_by_user_id(
+async def get_pokemon_by_name(
     name: str,
     pokemon_service: PokemonService = Depends(pokemon_service_factory),
 ) -> GetPokemonResponse:
     """Get Pokemon by name."""
     pokemon = await pokemon_service.get_pokemon(name)
+    return GetPokemonResponse(pokemon=pokemon)
+
+
+@router.get(
+    "/translated/{name}",
+    summary="Get Pokemon by name with translated description",
+    response_model=GetPokemonResponse,
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Returns the Pokemon by name with translated description",
+        },
+        status.HTTP_400_BAD_REQUEST: {"model": ErrorResponseSchema, "description": "Invalid input data"},
+        status.HTTP_404_NOT_FOUND: {"model": ErrorResponseSchema, "description": "Pokemon not found"},
+    },
+)
+async def get_pokemon_by_name_with_translated_description(
+    name: str,
+    pokemon_service: PokemonService = Depends(pokemon_service_factory),
+) -> GetPokemonResponse:
+    """Get Pokemon by name with translated description."""
+    pokemon = await pokemon_service.get_pokemon_with_translated_description(name)
     return GetPokemonResponse(pokemon=pokemon)
