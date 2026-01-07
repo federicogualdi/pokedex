@@ -1,7 +1,5 @@
 """Test for pokeapi rest client service."""
 
-import json
-
 import httpx
 import pytest
 
@@ -15,18 +13,9 @@ from pokedex.shared.exceptions import ExecutionError
 from tests.data.pokeapi_data_generators import flavor_en
 from tests.data.pokeapi_data_generators import flavor_it
 from tests.data.pokeapi_data_generators import pokeapi_species_payload
+from tests.unit.infrastructure.utils import transport_json
 
 BASE = "https://pokeapi.co/api/v2"
-
-
-def transport_json(status_code: int, payload: dict) -> MockTransport:
-    """Transport encoding."""
-
-    def handler(request: Request) -> Response:
-        content = json.dumps(payload).encode("utf-8")
-        return Response(status_code=status_code, content=content, request=request)
-
-    return MockTransport(handler)
 
 
 @pytest.mark.asyncio
