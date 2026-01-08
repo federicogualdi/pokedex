@@ -3,6 +3,7 @@
 from typing import Protocol
 
 from pokedex.domains.pokemon.model import Pokemon
+from pokedex.domains.pokemon.translation_strategy import TranslationStrategy
 
 
 class PokemonSpeciesPort(Protocol):
@@ -16,6 +17,6 @@ class PokemonSpeciesPort(Protocol):
 class TranslationPort(Protocol):
     """Translation port."""
 
-    async def shakespeare_translation(self, text: str) -> str:
-        """Translate text."""
+    async def translate(self, text: str, strategy: TranslationStrategy) -> str:
+        """Translate text with the given strategy."""
         ...

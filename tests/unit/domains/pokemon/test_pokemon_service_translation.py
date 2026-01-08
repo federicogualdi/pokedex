@@ -6,6 +6,7 @@ import pytest
 
 from pokedex.domains.pokemon.model import Pokemon
 from pokedex.domains.pokemon.service import PokemonService
+from pokedex.domains.pokemon.translation_strategy import TranslationStrategy
 from pokedex.shared.exceptions import ExecutionError
 
 
@@ -22,7 +23,7 @@ async def test_get_pokemon_with_translated_description_happy_path():
         habitat="rare",
         isLegendary=True,
     )
-    translation_port.shakespeare_translation.return_value = "Translated"
+    translation_port.translate.return_value = "Translated"
 
     svc = PokemonService(species_port=species_port, translation_port=translation_port)
 
@@ -31,7 +32,7 @@ async def test_get_pokemon_with_translated_description_happy_path():
 
     # Assert
     species_port.get_species_info.assert_awaited_once_with("mewtwo")
-    translation_port.shakespeare_translation.assert_awaited_once_with("Original")
+    translation_port.translate.assert_awaited_once_with("Original", TranslationStrategy.YODA)
     assert out.description == "Translated"
 
 
@@ -48,7 +49,7 @@ async def test_get_pokemon_with_translated_description_fallback_on_execution_err
         habitat="forest",
         isLegendary=False,
     )
-    translation_port.shakespeare_translation.side_effect = ExecutionError("rate limit")
+    translation_port.translate.side_effect = ExecutionError("rate limit")
 
     svc = PokemonService(species_port=species_port, translation_port=translation_port)
 
@@ -57,5 +58,5 @@ async def test_get_pokemon_with_translated_description_fallback_on_execution_err
 
     # Assert
     species_port.get_species_info.assert_awaited_once_with("pikachu")
-    translation_port.shakespeare_translation.assert_awaited_once_with("Original")
+    translation_port.translate.assert_awaited_once_with("Original", TranslationStrategy.SHAKESPEARE)
     assert out.description == "Original"

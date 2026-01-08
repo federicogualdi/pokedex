@@ -6,6 +6,13 @@ from httpx import MockTransport
 from httpx import Request
 from httpx import Response
 
+from pokedex.infrastructure.http.clients.funtranslations.client import ShakespeareTranslator
+
+FUNTRANSLATION_BASE = "https://api.funtranslations.com"
+TRANSLATION_STRATEGY = [
+    ShakespeareTranslator(),
+]
+
 
 def transport_json(status_code: int, payload: dict) -> MockTransport:
     """Build a MockTransport that returns given status/payload."""
