@@ -50,6 +50,22 @@ class ShakespeareTranslator(FunTranslator):
         return dto.contents.translated
 
 
+class YodaTranslator(FunTranslator):
+    """Funtranslations Yoda Http Client."""
+
+    strategy = TranslationStrategy.YODA
+
+    async def translate(self, request: RequestFn, text: str) -> str:
+        """Translate text using Yoda."""
+        response = await request(
+            method="POST",
+            path=settings.funtranslations_yoda_path,
+            json=FuntranslationsRequest(text=text).model_dump(),
+        )
+        dto = FuntranslationsResponse.model_validate(response.json())
+        return dto.contents.translated
+
+
 class FuntranslationsApiClient(BaseHttpClientAdapter, TranslationPort):
     """Funtranslations Http Client."""
 

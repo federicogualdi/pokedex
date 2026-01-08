@@ -14,6 +14,7 @@ from pokedex.entrypoints.rest.schemas.shared import ErrorResponseSchema
 from pokedex.infrastructure.http.clients.funtranslations.client import FuntranslationsApiClient
 from pokedex.infrastructure.http.clients.funtranslations.client import FunTranslator
 from pokedex.infrastructure.http.clients.funtranslations.client import ShakespeareTranslator
+from pokedex.infrastructure.http.clients.funtranslations.client import YodaTranslator
 from pokedex.infrastructure.http.clients.pokeapi.client import PokeApiClient
 from pokedex.settings import settings
 
@@ -23,7 +24,7 @@ router = APIRouter(prefix="/pokemon", tags=["Pokemon"])
 
 def get_available_translator() -> list[FunTranslator]:
     """Get available translator."""
-    return [ShakespeareTranslator()]
+    return [ShakespeareTranslator(), YodaTranslator()]
 
 
 def get_pokemon_species_client(request: Request) -> PokemonSpeciesPort:

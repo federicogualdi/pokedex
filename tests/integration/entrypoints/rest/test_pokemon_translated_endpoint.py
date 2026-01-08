@@ -6,7 +6,6 @@ import respx
 from httpx import AsyncClient
 from httpx import Response
 
-from pokedex.domains.pokemon.model import Pokemon
 from pokedex.entrypoints.rest.schemas.shared import ErrorResponseSchema
 from pokedex.settings import settings
 from tests.data.funtranslations_data_generators import funtranslations_success
@@ -28,12 +27,16 @@ async def test_get_pokemon_translated_happy_path(
     # Arrange
     poke_base = str(settings.pokeapi_base_url).rstrip("/")
     fun_base = str(settings.funtranslations_base_url).rstrip("/")
-    fun_path = str(settings.funtranslations_shakespeare_path).lstrip("/")
+    shakespeare_path = str(settings.funtranslations_shakespeare_path).lstrip("/")
+    yoda_path = str(settings.funtranslations_yoda_path).lstrip("/")
 
     respx.get(f"{poke_base}/pokemon-species/{pokemon_name}").mock(
         return_value=Response(200, json=pokeapi_json),
     )
-    respx.post(f"{fun_base}/{fun_path}").mock(
+    respx.post(f"{fun_base}/{shakespeare_path}").mock(
+        return_value=Response(200, json=funtranslations_success(translated=translated_text).model_dump()),
+    )
+    respx.post(f"{fun_base}/{yoda_path}").mock(
         return_value=Response(200, json=funtranslations_success(translated=translated_text).model_dump()),
     )
 
@@ -42,16 +45,7 @@ async def test_get_pokemon_translated_happy_path(
 
     # Assert
     assert resp.status_code == 200
-    pokemon = Pokemon(**resp.json()["pokemon"])
-    # TODO: remove it with issue #5
-    if pokemon.is_legendary or pokemon.habitat == "cave":
-        expected_pokemon = Pokemon(**expected_body["pokemon"])
-        assert pokemon.name == expected_pokemon.name
-        assert pokemon.habitat == expected_pokemon.habitat
-        assert pokemon.is_legendary == expected_pokemon.is_legendary
-        assert pokemon.description != expected_pokemon.description  # not equal
-    else:
-        assert resp.json() == expected_body
+    assert resp.json() == expected_body
 
 
 @pytest.mark.asyncio

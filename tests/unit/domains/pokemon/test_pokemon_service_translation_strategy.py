@@ -8,7 +8,6 @@ from pokedex.domains.pokemon.model import Pokemon
 from pokedex.domains.pokemon.service import PokemonService
 from pokedex.domains.pokemon.translation_strategy import TranslationStrategy
 from pokedex.domains.pokemon.translation_strategy import TranslationStrategyPolicy
-from pokedex.shared.exceptions import ExecutionError
 
 
 class FixedPolicy(TranslationStrategyPolicy):
@@ -53,8 +52,8 @@ async def test_service_translates_with_shakespeare_when_policy_says_so():
 
 
 @pytest.mark.asyncio
-async def test_service_fallbacks_when_policy_selects_yoda_but_not_implemented():
-    """Test service fallbacks meanwhile yoda not implemented."""
+async def test_service_translates_with_yoda_when_policy_says_so():
+    """Test service translates with yoda."""
     # Arrange
     species_port = AsyncMock()
     translation_port = AsyncMock()
@@ -65,7 +64,7 @@ async def test_service_fallbacks_when_policy_selects_yoda_but_not_implemented():
         habitat="cave",
         isLegendary=True,
     )
-    translation_port.translate.side_effect = ExecutionError("not supported yet")
+    translation_port.translate.return_value = "Translated"
 
     svc = PokemonService(
         species_port=species_port,
@@ -78,4 +77,4 @@ async def test_service_fallbacks_when_policy_selects_yoda_but_not_implemented():
 
     # Assert
     translation_port.translate.assert_awaited_once_with("Original", TranslationStrategy.YODA)
-    assert out.description == "Original"
+    assert out.description == "Translated"
