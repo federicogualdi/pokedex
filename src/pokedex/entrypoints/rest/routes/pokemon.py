@@ -8,14 +8,22 @@ from starlette.requests import Request
 from pokedex.domains.pokemon.ports import PokemonSpeciesPort
 from pokedex.domains.pokemon.ports import TranslationPort
 from pokedex.domains.pokemon.service import PokemonService
+from pokedex.domains.pokemon.translation_strategy import TranslationStrategyPolicy
 from pokedex.entrypoints.rest.schemas.pokemon import GetPokemonResponse
 from pokedex.entrypoints.rest.schemas.shared import ErrorResponseSchema
 from pokedex.infrastructure.http.clients.funtranslations.client import FuntranslationsApiClient
+from pokedex.infrastructure.http.clients.funtranslations.client import FunTranslator
+from pokedex.infrastructure.http.clients.funtranslations.client import ShakespeareTranslator
 from pokedex.infrastructure.http.clients.pokeapi.client import PokeApiClient
 from pokedex.settings import settings
 
 # router definition
 router = APIRouter(prefix="/pokemon", tags=["Pokemon"])
+
+
+def get_available_translator() -> list[FunTranslator]:
+    """Get available translator."""
+    return [ShakespeareTranslator()]
 
 
 def get_pokemon_species_client(request: Request) -> PokemonSpeciesPort:
@@ -25,7 +33,11 @@ def get_pokemon_species_client(request: Request) -> PokemonSpeciesPort:
 
 def get_translation_client(request: Request) -> TranslationPort:
     """Get Translation client."""
-    return FuntranslationsApiClient(http=request.app.state.http, base_url=settings.funtranslations_base_url)
+    return FuntranslationsApiClient(
+        http=request.app.state.http,
+        base_url=settings.funtranslations_base_url,
+        translators=get_available_translator(),
+    )
 
 
 def pokemon_service_factory(request: Request) -> PokemonService:
@@ -33,6 +45,7 @@ def pokemon_service_factory(request: Request) -> PokemonService:
     return PokemonService(
         species_port=get_pokemon_species_client(request),
         translation_port=get_translation_client(request),
+        strategy_policy=TranslationStrategyPolicy(),
     )
 
 

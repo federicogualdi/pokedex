@@ -25,6 +25,22 @@ def expected_pokemon_response(
 # Happy path: translation applied
 TRANSLATED_HAPPY_CASES = [
     (
+        "pikachu",
+        pokeapi_species_payload(
+            name="pikachu",
+            habitat="forest",
+            is_legendary=False,
+            flavor_entries=[flavor_en("Electric mouse.")],
+        ),
+        "Translated description.",
+        expected_pokemon_response(
+            name="pikachu",
+            description="Translated description.",
+            habitat="forest",
+            is_legendary=False,
+        ),
+    ),
+    (
         "mewtwo",
         pokeapi_species_payload(
             name="mewtwo",
