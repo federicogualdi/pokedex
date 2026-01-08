@@ -7,10 +7,12 @@ from httpx import Request
 from httpx import Response
 
 from pokedex.infrastructure.http.clients.funtranslations.client import ShakespeareTranslator
+from pokedex.infrastructure.http.clients.funtranslations.client import YodaTranslator
 
 FUNTRANSLATION_BASE = "https://api.funtranslations.com"
 TRANSLATION_STRATEGY = [
     ShakespeareTranslator(),
+    YodaTranslator(),
 ]
 
 
