@@ -53,20 +53,69 @@ No secrets are required for local development.
 
 ## Requirements
 
-You can run the project in two different ways.
+### General
 
-### Option A – Local (Poetry)
+The project relies on **GNU Make** as the primary command interface.
 
+All supported workflows - local development, Docker Compose operations, testing, linting, and coverage - are exposed via the provided [`Makefile`](Makefile).
+
+---
+
+### Execution Modes
+
+You can run the project in one of the following ways.
+
+#### Option A – Local (Poetry)
+
+Required tools:
 - Python 3.13
 - Poetry >= 2
-- GNU Make
 
-### Option B – Containerized (recommended)
+This option is recommended if you prefer running the application and tooling directly on your host system.
 
+#### Option B – Containerized (recommended)
+
+Required tools:
 - Docker
 - Docker Compose (v2 plugin)
 
-No local Python or Poetry installation is required when using Docker.
+This option requires no local Python or Poetry installation and provides the highest parity with CI and production-like environments.
+
+---
+
+### GNU Make
+
+GNU Make is **recommended** and used as the official interface to interact with the project.
+
+All common tasks are wrapped as Make targets:
+- application lifecycle (build, run, stop)
+- Docker Compose operations
+- tests and linting
+- coverage generation and enforcement
+#### Make is recommended, but not strictly required
+
+If `make` is not installed on your system and cannot be installed, you can still work with the project by executing the underlying commands directly.
+
+All commands executed by Make are plain shell commands and can be inspected in the [`Makefile`](Makefile), which should be treated as the **source of truth** for the exact commands and flags used by the project.
+
+Examples:
+
+- `make test` wraps:
+  ```
+  poetry run pytest
+  ```
+
+- `make coverage` wraps:
+  ```
+  poetry run coverage run -m pytest
+  poetry run coverage report
+  poetry run coverage html
+  ```
+
+- `make compose-up` wraps:
+  ```
+  docker compose up -d
+  ```
 
 ---
 
