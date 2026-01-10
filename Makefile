@@ -37,6 +37,7 @@ coverage:
 	poetry run coverage run -m pytest --verbose --junit-xml ./reports/tests.xml
 	poetry run coverage report
 	poetry run coverage xml -o ./reports/coverage.xml
+	poetry run coverage html -d htmlcov
 
 # check target coverage against threshold
 # must be run after running coverage
