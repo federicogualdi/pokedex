@@ -11,6 +11,8 @@ from pokedex.domains.pokemon.service import PokemonService
 from pokedex.domains.pokemon.translation_strategy import TranslationStrategyPolicy
 from pokedex.entrypoints.rest.schemas.pokemon import GetPokemonResponse
 from pokedex.entrypoints.rest.schemas.shared import ErrorResponseSchema
+from pokedex.infrastructure.cache.decorators import CachedPokemonSpeciesPort
+from pokedex.infrastructure.cache.decorators import CachedTranslationPort
 from pokedex.infrastructure.http.clients.funtranslations.client import FuntranslationsApiClient
 from pokedex.infrastructure.http.clients.funtranslations.client import FunTranslator
 from pokedex.infrastructure.http.clients.funtranslations.client import ShakespeareTranslator
@@ -29,16 +31,28 @@ def get_available_translator() -> list[FunTranslator]:
 
 def get_pokemon_species_client(request: Request) -> PokemonSpeciesPort:
     """Get Pokemon Species client."""
-    return PokeApiClient(http=request.app.state.http, base_url=settings.pokeapi_base_url)
+    raw = PokeApiClient(http=request.app.state.http, base_url=settings.pokeapi_base_url)
+
+    if not settings.cache_enabled:
+        return raw
+
+    cache_state = request.app.state.cache
+    return CachedPokemonSpeciesPort(raw, cache=cache_state.species_cache, locks=cache_state.locks)
 
 
 def get_translation_client(request: Request) -> TranslationPort:
     """Get Translation client."""
-    return FuntranslationsApiClient(
+    raw = FuntranslationsApiClient(
         http=request.app.state.http,
         base_url=settings.funtranslations_base_url,
         translators=get_available_translator(),
     )
+
+    if not settings.cache_enabled:
+        return raw
+
+    cache_state = request.app.state.cache
+    return CachedTranslationPort(raw, cache=cache_state.translation_cache, locks=cache_state.locks)
 
 
 def pokemon_service_factory(request: Request) -> PokemonService:

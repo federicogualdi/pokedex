@@ -35,7 +35,7 @@ class PokemonService:
 
         try:
             translated = await self._translation_port.translate(pokemon.description, strategy)
-            pokemon.description = translated
+            pokemon = pokemon.model_copy(update={"description": translated})
         except ExecutionError:
             logger.exception(
                 f"Error while translating {pokemon.name} description with {strategy}. Fallback with the default one.",

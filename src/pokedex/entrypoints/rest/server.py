@@ -10,6 +10,7 @@ from fastapi import FastAPI
 from pokedex.entrypoints.rest.middleware.exception_handler import install_error_handlers
 from pokedex.entrypoints.rest.middleware.observability import install_request_timing_middleware
 from pokedex.entrypoints.rest.routes import pokemon
+from pokedex.infrastructure.cache.state import build_cache_state
 from pokedex.infrastructure.http.http_client import build_async_http_client
 from pokedex.settings import get_logger
 from pokedex.settings import settings
@@ -23,6 +24,10 @@ async def lifespan(app: FastAPI):
     """Lifespan context manager."""
     http = build_async_http_client(settings)
     app.state.http = http
+
+    # cache state (process-local)
+    app.state.cache = build_cache_state(settings)
+
     yield
 
     await http.aclose()

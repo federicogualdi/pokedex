@@ -6,9 +6,9 @@ import pytest
 from pokedex.domains.pokemon.translation_strategy import TranslationStrategy
 from pokedex.infrastructure.http.clients.funtranslations.client import FuntranslationsApiClient
 from tests.data.funtranslations_data_generators import funtranslations_success
-from tests.unit.infrastructure.utils import FUNTRANSLATION_BASE
-from tests.unit.infrastructure.utils import TRANSLATION_STRATEGY
-from tests.unit.infrastructure.utils import transport_json
+from tests.unit.infrastructure.http.utils import FUNTRANSLATION_BASE
+from tests.unit.infrastructure.http.utils import TRANSLATION_STRATEGY
+from tests.unit.infrastructure.http.utils import transport_json
 
 
 @pytest.mark.asyncio

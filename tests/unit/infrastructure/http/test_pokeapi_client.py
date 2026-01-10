@@ -13,7 +13,7 @@ from pokedex.shared.exceptions import ExecutionError
 from tests.data.pokeapi_data_generators import flavor_en
 from tests.data.pokeapi_data_generators import flavor_it
 from tests.data.pokeapi_data_generators import pokeapi_species_payload
-from tests.unit.infrastructure.utils import transport_json
+from tests.unit.infrastructure.http.utils import transport_json
 
 BASE = "https://pokeapi.co/api/v2"
 
