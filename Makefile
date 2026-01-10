@@ -34,15 +34,15 @@ compose-coverage:
 ####
 
 coverage:
-	coverage run -m pytest --verbose --junit-xml ./reports/tests.xml
-	coverage report
-	coverage xml -o ./reports/coverage.xml
+	poetry run coverage run -m pytest --verbose --junit-xml ./reports/tests.xml
+	poetry run coverage report
+	poetry run coverage xml -o ./reports/coverage.xml
 
 # check target coverage against threshold
 # must be run after running coverage
 check-coverage-threshold:
 	@if [ -n "$(target_coverage)" ]; then \
-		COV_PERCENT=$$(coverage report | grep -Po "(?<=TOTAL\s).+?(\d+)%" | grep -Po "\d+(?=%)"); \
+		COV_PERCENT=$$(poetry run coverage report | grep -Po "(?<=TOTAL\s).+?(\d+)%" | grep -Po "\d+(?=%)"); \
 		echo "Coverage percentage: $$COV_PERCENT%"; \
 		if [ "$$COV_PERCENT" -lt "$(target_coverage)" ]; then \
 			echo "Error: Coverage threshold not met. Target: $(target_coverage)%, Actual: $$COV_PERCENT%"; \
