@@ -6,6 +6,9 @@ on:
 permissions:
   contents: read
 
+env:
+  COVERAGE_THRESHOLD: 95
+
 jobs:
   lint:
     name: Lint
@@ -78,6 +81,17 @@ jobs:
         run: |
           poetry install --with dev
 
-      - name: Run tests
+      - name: Run Test and Generate coverage report
         run: |
-          make test
+          make coverage
+
+      - name: Enforce coverage threshold
+        run: |
+          make check-coverage-threshold target_coverage=${COVERAGE_THRESHOLD}
+
+      - name: Upload HTML coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: htmlcov
+          path: htmlcov

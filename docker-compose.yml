@@ -1,0 +1,33 @@
+networks:
+  app: # main network
+
+services:
+
+  rest_server:
+    container_name: pokedex-rest-server
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE}
+    image: pokedex-${DOCKER_IMAGE_SUFFIX}
+    environment:
+      - DEBUG=${DEBUG}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - WAIT_FOR_DEBUGGER=${REST_WAIT_FOR_DEBUGGER}
+      - PREFERRED_LANGUAGE=${PREFERRED_LANGUAGE}
+      - POKEAPI_BASE_URL=${POKEAPI_BASE_URL}
+      - FUNTRANSLATIONS_BASE_URL=${FUNTRANSLATIONS_BASE_URL}
+      - FUNTRANSLATIONS_SHAKESPEARE_PATH=${FUNTRANSLATIONS_SHAKESPEARE_PATH}
+      - FUNTRANSLATIONS_YODA_PATH=${FUNTRANSLATIONS_YODA_PATH}
+      - HTTP_TIMEOUT_SECONDS=${HTTP_TIMEOUT_SECONDS}
+    ports:
+      - ${REST_EXPOSED_SERVER_PORT}:8000
+      - ${REST_DEBUG_PORT:-5678}:5678
+    volumes:
+      - ./src/pokedex:/home/app/project/src/pokedex
+      - ./tests:/home/app/project/tests
+      # copy pyptoject.toml in the code folder to be able to provide coverage and other settings at runtime
+      - ./pyproject.toml:/home/app/project/pyproject.toml
+      # test coverage results
+      - ./htmlcov:/home/app/project/htmlcov
+    networks:
+      - app
