@@ -1,0 +1,67 @@
+##################### Stage 1: Builder stage ####################
+FROM python:3.13-slim-bookworm AS builder
+
+# Install apt required packages to compile psycopg2 (gcc, libpq-dev, python3-dev) and to install poetry (curl)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends --no-install-suggests \
+        gcc  \
+        libpq-dev \
+        python3-dev \
+        curl \
+    && apt-get install -f -y --no-install-recommends && rm -rf /var/lib/apt/lists/*
+
+# Install poetry
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN curl -sSL https://install.python-poetry.org | python3 -
+# Export poetry path
+ENV PATH="/root/.local/bin:$PATH"
+# Disable virtualenv creation
+RUN poetry config virtualenvs.create false
+
+# Copy pyproject.toml and poetry.lock
+# hadolint ignore=DL3045
+COPY pyproject.toml ./pyproject.toml
+# hadolint ignore=DL3045
+COPY poetry.lock ./poetry.lock
+
+# Install any project specific Python packages
+# do not install current project package in editable mode (--no-root) is achieved by setting package-mode = false in pyproject
+RUN poetry install --only main --sync --no-root
+
+##################################### Stage 2: Final Stage ########################
+FROM python:3.13-slim-bookworm
+
+# Install needed apt packages (libpq is for psycopg2)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libpq5 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy python deps from builder stage
+COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+COPY --from=builder /usr/local/include /usr/local/include
+
+# Create app user and group
+RUN addgroup --system app && adduser --system app --ingroup app
+
+ENV PRJ=/home/app/project
+RUN mkdir -p $PRJ
+
+# Copy project files
+COPY src $PRJ/src
+
+# chown project files to the app user
+RUN chown -R app:app ${PRJ}
+
+WORKDIR $PRJ
+
+# Set non root user
+USER app
+
+# Add current folder to pyhton sys.path
+ENV PYTHONPATH=/$PRJ/src
+
+# Set entrypoint
+ENTRYPOINT [ "uvicorn", "pokedex.entrypoints.rest.server:app", "--host", "0.0.0.0" ]
