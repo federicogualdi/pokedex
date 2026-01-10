@@ -36,13 +36,24 @@ class Settings(CommonSettings):
     )
 
     # External services
-    pokeapi_base_url: str = Field(default="https://pokeapi.co/api/v2")
-    funtranslations_base_url: str = Field(default="https://api.funtranslations.com/translate")
-    funtranslations_shakespeare_path: str = Field(default="shakespeare")
-    funtranslations_yoda_path: str = Field(default="yoda")
+    pokeapi_base_url: str = Field(default="https://pokeapi.co/api/v2", validation_alias="POKEAPI_BASE_URL")
+    funtranslations_base_url: str = Field(
+        default="https://api.funtranslations.com/translate",
+        validation_alias="FUNTRANSLATIONS_BASE_URL",
+    )
+    funtranslations_shakespeare_path: str = Field(
+        default="shakespeare",
+        validation_alias="FUNTRANSLATIONS_SHAKESPEARE_PATH",
+    )
+    funtranslations_yoda_path: str = Field(default="yoda", validation_alias="FUNTRANSLATIONS_YODA_PATH")
 
     # HTTP
     http_timeout_seconds: float = Field(default=5.0, validation_alias="HTTP_TIMEOUT_SECONDS")
+
+    # Cache
+    cache_enabled: bool = Field(default=True, validation_alias="CACHE_ENABLED")
+    cache_ttl_seconds: int = Field(default=86400, validation_alias="CACHE_TTL_SECONDS")
+    cache_maxsize: int = Field(default=2048, validation_alias="CACHE_MAXSIZE")
 
     def __init__(self, *args, **kwargs) -> None:
         """Init settings."""
