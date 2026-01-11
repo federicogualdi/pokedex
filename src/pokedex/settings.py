@@ -18,6 +18,26 @@ class CommonSettings(BaseSettings):
     )
 
 
+class CacheSettings(CommonSettings):
+    """Cache settings."""
+
+    enabled: bool = Field(default=True, validation_alias="CACHE_ENABLED")
+    ttl_seconds: int = Field(default=86400, validation_alias="CACHE_TTL_SECONDS")
+    maxsize: int = Field(default=2048, validation_alias="CACHE_MAXSIZE")
+
+
+class SentrySettings(CommonSettings):
+    """Sentry settings."""
+
+    enabled: bool = Field(default=False, validation_alias="SENTRY_ENABLED")
+    dsn: str | None = Field(default=None, validation_alias="SENTRY_DSN")
+    environment: str = Field(default="local", validation_alias="SENTRY_ENVIRONMENT")
+    release: str | None = Field(default=None, validation_alias="SENTRY_RELEASE")
+    traces_sample_rate: float = Field(default=0.0, validation_alias="SENTRY_TRACES_SAMPLE_RATE")  # performance
+    profiles_sample_rate: float = Field(default=0.0, validation_alias="SENTRY_PROFILES_SAMPLE_RATE")  # profiling
+    send_default_pii: bool = Field(default=False, validation_alias="SENTRY_SEND_DEFAULT_PII")
+
+
 class Settings(CommonSettings):
     """Application settings.
 
@@ -51,9 +71,10 @@ class Settings(CommonSettings):
     http_timeout_seconds: float = Field(default=5.0, validation_alias="HTTP_TIMEOUT_SECONDS")
 
     # Cache
-    cache_enabled: bool = Field(default=True, validation_alias="CACHE_ENABLED")
-    cache_ttl_seconds: int = Field(default=86400, validation_alias="CACHE_TTL_SECONDS")
-    cache_maxsize: int = Field(default=2048, validation_alias="CACHE_MAXSIZE")
+    cache: CacheSettings = Field(default_factory=CacheSettings)
+
+    # Sentry
+    sentry: SentrySettings = Field(default_factory=SentrySettings)
 
     def __init__(self, *args, **kwargs) -> None:
         """Init settings."""

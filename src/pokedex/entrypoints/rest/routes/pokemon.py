@@ -33,7 +33,7 @@ def get_pokemon_species_client(request: Request) -> PokemonSpeciesPort:
     """Get Pokemon Species client."""
     raw = PokeApiClient(http=request.app.state.http, base_url=settings.pokeapi_base_url)
 
-    if not settings.cache_enabled:
+    if not settings.cache.enabled:
         return raw
 
     cache_state = request.app.state.cache
@@ -48,7 +48,7 @@ def get_translation_client(request: Request) -> TranslationPort:
         translators=get_available_translator(),
     )
 
-    if not settings.cache_enabled:
+    if not settings.cache.enabled:
         return raw
 
     cache_state = request.app.state.cache
