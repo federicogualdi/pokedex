@@ -15,7 +15,7 @@ compose-down:
 	docker compose down --remove-orphans
 
 compose-test:
-	docker compose run --rm --no-deps --entrypoint=pytest rest_server
+	docker compose run --rm --no-deps -e SENTRY_ENABLED=0 --entrypoint=pytest rest_server
 
 compose-logs:
 	docker compose logs -f
@@ -28,16 +28,16 @@ compose-ps:
 
 # set DEBUG=0 to prevent issues with coverage tool showing wrong percentage due to conflicts with debugpy (just importing it breaks coverage tests collection)
 compose-coverage:
-	docker compose run --rm --no-deps -e DEBUG=0 --entrypoint= rest_server sh -c "coverage run -m pytest && coverage report && coverage html"
+	docker compose run --rm --no-deps -e DEBUG=0 -e SENTRY_ENABLED=0 --entrypoint= rest_server sh -c "coverage run -m pytest && coverage report && coverage html"
 
 
 ####
 
 coverage:
-	poetry run coverage run -m pytest --verbose --junit-xml ./reports/tests.xml
-	poetry run coverage report
-	poetry run coverage xml -o ./reports/coverage.xml
-	poetry run coverage html -d htmlcov
+	SENTRY_ENABLED=0 poetry run coverage run -m pytest --verbose --junit-xml ./reports/tests.xml
+	SENTRY_ENABLED=0 poetry run coverage report
+	SENTRY_ENABLED=0 poetry run coverage xml -o ./reports/coverage.xml
+	SENTRY_ENABLED=0 poetry run coverage html -d htmlcov
 
 # check target coverage against threshold
 # must be run after running coverage
@@ -65,7 +65,7 @@ run:
 	poetry run uvicorn --reload --host 0.0.0.0 --port 8000 pokedex.entrypoints.rest.server:app
 
 test:
-	poetry run pytest
+	SENTRY_ENABLED=0 poetry run pytest
 
 lint:
 	poetry run pre-commit run --all-files

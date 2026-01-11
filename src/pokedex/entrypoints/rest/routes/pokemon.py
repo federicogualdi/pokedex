@@ -6,6 +6,8 @@ from starlette import status
 from starlette.requests import Request
 
 from pokedex.domains.pokemon.ports import PokemonSpeciesPort
+from pokedex.domains.pokemon.ports import RetryingPokemonSpeciesPort
+from pokedex.domains.pokemon.ports import RetryingTranslationPort
 from pokedex.domains.pokemon.ports import TranslationPort
 from pokedex.domains.pokemon.service import PokemonService
 from pokedex.domains.pokemon.translation_strategy import TranslationStrategyPolicy
@@ -18,6 +20,7 @@ from pokedex.infrastructure.http.clients.funtranslations.client import FunTransl
 from pokedex.infrastructure.http.clients.funtranslations.client import ShakespeareTranslator
 from pokedex.infrastructure.http.clients.funtranslations.client import YodaTranslator
 from pokedex.infrastructure.http.clients.pokeapi.client import PokeApiClient
+from pokedex.infrastructure.resilience.retry import RetryPolicy
 from pokedex.settings import settings
 
 # router definition
@@ -32,12 +35,13 @@ def get_available_translator() -> list[FunTranslator]:
 def get_pokemon_species_client(request: Request) -> PokemonSpeciesPort:
     """Get Pokemon Species client."""
     raw = PokeApiClient(http=request.app.state.http, base_url=settings.pokeapi_base_url)
+    retrying = RetryingPokemonSpeciesPort(raw, policy=RetryPolicy(attempts=3))
 
     if not settings.cache.enabled:
-        return raw
+        return retrying
 
     cache_state = request.app.state.cache
-    return CachedPokemonSpeciesPort(raw, cache=cache_state.species_cache, locks=cache_state.locks)
+    return CachedPokemonSpeciesPort(retrying, cache=cache_state.species_cache, locks=cache_state.locks)
 
 
 def get_translation_client(request: Request) -> TranslationPort:
@@ -47,12 +51,13 @@ def get_translation_client(request: Request) -> TranslationPort:
         base_url=settings.funtranslations_base_url,
         translators=get_available_translator(),
     )
+    retrying = RetryingTranslationPort(raw, policy=RetryPolicy(attempts=3))
 
     if not settings.cache.enabled:
-        return raw
+        return retrying
 
     cache_state = request.app.state.cache
-    return CachedTranslationPort(raw, cache=cache_state.translation_cache, locks=cache_state.locks)
+    return CachedTranslationPort(retrying, cache=cache_state.translation_cache, locks=cache_state.locks)
 
 
 def pokemon_service_factory(request: Request) -> PokemonService:
