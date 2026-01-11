@@ -2,6 +2,8 @@
 export COMPOSE_DOCKER_CLI_BUILD=1
 export DOCKER_BUILDKIT=1
 
+.PHONY: loadtest
+
 ############################################## docker compose related targets ##############################################
 all: compose-down compose-build compose-up
 
@@ -69,3 +71,19 @@ test:
 
 lint:
 	poetry run pre-commit run --all-files
+
+loadtest:
+	docker run --rm -i \
+	  -v $(PWD):/work \
+	  -w /work \
+	  --add-host=host.docker.internal:host-gateway \
+	  -e BASE_URL="http://host.docker.internal:8000" \
+	  grafana/k6 run loadtest/pokedex.k6.js
+
+loadtest-prod:
+	docker run --rm -i \
+	  -v $(PWD):/work \
+	  -w /work \
+	  --add-host=host.docker.internal:host-gateway \
+	  -e BASE_URL="https://pokedex.federicogualdi.com" \
+	  grafana/k6 run loadtest/pokedex.k6.js

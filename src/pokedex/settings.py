@@ -38,6 +38,13 @@ class SentrySettings(CommonSettings):
     send_default_pii: bool = Field(default=False, validation_alias="SENTRY_SEND_DEFAULT_PII")
 
 
+class RetrySettings(CommonSettings):
+    """Retry settings."""
+
+    enabled: bool = Field(default=True, validation_alias="RETRY_ENABLED")
+    attempts: int = Field(default=3, validation_alias="RETRY_ATTEMPTS")
+
+
 class Settings(CommonSettings):
     """Application settings.
 
@@ -75,6 +82,9 @@ class Settings(CommonSettings):
 
     # Sentry
     sentry: SentrySettings = Field(default_factory=SentrySettings)
+
+    # Retry
+    retry: RetrySettings = Field(default_factory=RetrySettings)
 
     def __init__(self, *args, **kwargs) -> None:
         """Init settings."""
