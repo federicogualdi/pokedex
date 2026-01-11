@@ -114,8 +114,16 @@ The provided Makefile handles this detail transparently.
 
 ### Recommended command
 
+To run the load test against the local environment:
+
 ```bash
 make loadtest
+```
+
+To run the load test against the production environment:
+
+```bash
+make loadtest-prod
 ```
 
 This is the only command required.
