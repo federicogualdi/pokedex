@@ -20,7 +20,7 @@ class CacheState:
 def build_cache_state(settings: Settings) -> CacheState:
     """Build cache state."""
     return CacheState(
-        species_cache=InMemoryTTLCache(ttl_seconds=settings.cache_ttl_seconds, maxsize=settings.cache_maxsize),
-        translation_cache=InMemoryTTLCache(ttl_seconds=settings.cache_ttl_seconds, maxsize=settings.cache_maxsize),
+        species_cache=InMemoryTTLCache(ttl_seconds=settings.cache.ttl_seconds, maxsize=settings.cache.maxsize),
+        translation_cache=InMemoryTTLCache(ttl_seconds=settings.cache.ttl_seconds, maxsize=settings.cache.maxsize),
         locks=KeyedAsyncLocks(),
     )

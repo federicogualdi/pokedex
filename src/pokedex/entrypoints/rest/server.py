@@ -12,6 +12,7 @@ from pokedex.entrypoints.rest.middleware.observability import install_request_ti
 from pokedex.entrypoints.rest.routes import pokemon
 from pokedex.infrastructure.cache.state import build_cache_state
 from pokedex.infrastructure.http.http_client import build_async_http_client
+from pokedex.infrastructure.observability.sentry import init_sentry
 from pokedex.settings import get_logger
 from pokedex.settings import settings
 
@@ -32,6 +33,17 @@ async def lifespan(app: FastAPI):
 
     await http.aclose()
 
+
+init_sentry(
+    dsn=settings.sentry.dsn,
+    enabled=settings.sentry.enabled,
+    environment=settings.sentry.environment,
+    release=settings.sentry.release,
+    service_name="Pokedex",
+    traces_sample_rate=settings.sentry.traces_sample_rate,
+    profiles_sample_rate=settings.sentry.profiles_sample_rate,
+    send_default_pii=settings.sentry.send_default_pii,
+)
 
 app = FastAPI(
     lifespan=lifespan,
