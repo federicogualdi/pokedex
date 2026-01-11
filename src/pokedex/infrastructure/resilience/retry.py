@@ -7,11 +7,15 @@ from collections.abc import Awaitable
 from collections.abc import Callable
 from dataclasses import dataclass
 
+from pokedex.settings import get_logger
 from pokedex.shared.exceptions import UpstreamRequestError
 from pokedex.shared.exceptions import UpstreamServerError
 from pokedex.shared.exceptions import UpstreamTimeoutError
 
 _rng = random.SystemRandom()
+
+# logger
+logger = get_logger()
 
 
 @dataclass(frozen=True)
@@ -88,6 +92,12 @@ async def with_retry[T](
                 raise
 
             sleep_s = _compute_sleep_s(attempt, policy)
+
+            logger.warning(
+                f"Retrying after error (attempt {attempt}/{policy.attempts}). Sleeping {sleep_s:.2f}s. Error: {exc}",
+                exc_info=True,
+            )
+
             await asyncio.sleep(sleep_s)
 
     raise last_exc  # type: ignore[misc]
