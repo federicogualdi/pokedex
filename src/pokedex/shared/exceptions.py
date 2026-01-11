@@ -1,5 +1,7 @@
 """Custom exception definitions for the project."""
 
+from dataclasses import dataclass
+
 
 class BaseError(Exception):
     """Base class for all custom exceptions."""
@@ -15,3 +17,30 @@ class InvalidArgumentError(BaseError):
 
 class ExecutionError(BaseError):
     """Raised when an unexpected behavior happens."""
+
+
+@dataclass(frozen=True)
+class UpstreamError(ExecutionError):
+    """Base class for upstream exceptions."""
+
+    service: str
+    method: str
+    path: str
+    status_code: int | None = None
+    detail: str | None = None
+
+
+class UpstreamServerError(UpstreamError):
+    """5xx from upstream (retriable)."""
+
+
+class UpstreamClientError(UpstreamError):
+    """4xx from upstream (usually not retriable)."""
+
+
+class UpstreamTimeoutError(UpstreamError):
+    """Timeout talking to upstream (retriable)."""
+
+
+class UpstreamRequestError(UpstreamError):
+    """Network/DNS/connection error (retriable)."""
